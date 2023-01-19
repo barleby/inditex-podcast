@@ -1,21 +1,17 @@
 export default function checkDate() {
 
-    console.log("existe en localStorage? ", localStorage.getItem('timeOfUpdate') ? true : false)
-    const currentDateInMiliseconds = Date.now()
-    const getLastTimeUpdated = () => {
-        const lastDay = localStorage.getItem('timeOfUpdate')
-        if (!lastDay) {
-            localStorage.setItem('timeOfUpdate', currentDateInMiliseconds)
-            return currentDateInMiliseconds
-        }
+    console.log("existe en localStorage? ", localStorage.getItem('timeOfUpdate') ? true : false);
+    const currentDateInMiliseconds = Date.now();
 
-        return lastDay;
+    const lastTimeUpdated = localStorage.getItem('timeOfUpdate');
+    if (!lastTimeUpdated) {
+        localStorage.setItem('timeOfUpdate', currentDateInMiliseconds);
+        return true;
     }
 
-    const lastTimeUpdated = getLastTimeUpdated();
-    const oneDayInMilisencods = 1000
+    const oneDayInMilisencods = 1000 * 60 * 60 * 24;
 
-    const needToUpdate = true;  // temporarily set to true formula:(currentDateInMiliseconds - lastTimeUpdated) > oneDayInMilisencods;
+    const needToUpdate = (currentDateInMiliseconds - lastTimeUpdated) > oneDayInMilisencods;
 
     console.log('needUpdate:', needToUpdate)
 

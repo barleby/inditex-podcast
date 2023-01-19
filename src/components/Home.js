@@ -15,23 +15,23 @@ const Home = () => {
 
     const updateFetchedData = (data) => {
         const
-            dataObject = JSON.parse(data.contents),
-            list = dataObject.feed.entry;
+            dataObject = data;
 
-        if (list.length > 0){
-            setPodcastList(list);
-            localStorage.setItem('podcastList', JSON.stringify(list));
+
+        if (dataObject.length > 0){
+            setPodcastList(dataObject);
+            localStorage.setItem('podcastList', JSON.stringify(dataObject));
         }
     };
 
     useEffect( () => {
         store.handleLoader(false);
 
-       const storedPodcastList = JSON.parse(localStorage.getItem('podcastList')) ?? []
+       const storedPodcastList = localStorage.getItem('podcastList');
 
-        const test = checkDate();
+        const needToUpdate = checkDate();
 
-        if(checkDate()) {
+        if(needToUpdate) {
 
             fetch(`https://api.allorigins.win/get?url=${iTunesUrl}`)
                 .then(response => {
@@ -39,12 +39,11 @@ const Home = () => {
                     throw new Error('KO. Error de red')
                 })
                 .then(data => {
-                    console.log('data:',data)
-                    updateFetchedData(data);
+                    updateFetchedData(JSON.parse(data.contents).feed.entry);
                 });
             console.log("FETCHING DATA")
         } else {
-            updateFetchedData(storedPodcastList)
+            updateFetchedData(JSON.parse(storedPodcastList))
         }
     }, []);
 
